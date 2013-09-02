@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=5" namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" />
+  <xs:import schemaLocation="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=1" namespace="http://www.w3.org/2000/09/xmldsig#" />
+  <xs:import schemaLocation="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=3" namespace="urn:oasis:names:tc:SAML:2.0:assertion" />
+  <xs:element name="Security">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" ref="wsu:Timestamp" />
+        <xs:element minOccurs="0" maxOccurs="1" ref="saml:Assertion" />
+        <xs:element minOccurs="0" maxOccurs="1" ref="ds:Signature" />
+      </xs:sequence>
+      <xs:attribute name="id" use="optional" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsernameToken">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" ref="wsse:Username" />
+        <xs:element minOccurs="1" maxOccurs="1" ref="wsse:Password" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Username" type="xs:NCName" />
+  <xs:element name="Password" type="xs:NCName" />
+</xs:schema>

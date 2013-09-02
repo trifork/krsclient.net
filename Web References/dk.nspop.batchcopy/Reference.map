@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=1" filename="StamdataReplication.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=3" filename="StamdataReplication0.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=5" filename="StamdataReplication1.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?wsdl" filename="StamdataReplication.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=6" filename="StamdataReplication2.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=2" filename="StamdataReplication3.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?xsd=4" filename="StamdataReplication4.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

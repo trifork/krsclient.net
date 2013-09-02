@@ -11,7 +11,8 @@
     <RootNamespace>krsclient.net</RootNamespace>
     <AssemblyName>krsclient.net</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -20,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,14 +30,26 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DgwsTypes">
+      <HintPath>Dll\DgwsTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel">
+      <HintPath>Dll\Microsoft.IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Seal">
+      <HintPath>Dll\Seal.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,11 +65,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Web References\dk.nspop.batchcopy\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
+    <Compile Include="SosiUtil.cs" />
+    <Compile Include="StamdataReplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -65,35 +75,11 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication%3fwsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\dk.nspop.batchcopy\</RelPath>
-      <UpdateFromURL>http://test2-cnsp.ekstern-test.nspop.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication%3fwsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>krsclient_net_dk_nspop_batchcopy_StamdataReplicationService</CachedSettingsPropName>
-    </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\dk.nspop.batchcopy\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication.wsdl" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication.xsd" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication0.xsd" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication1.xsd" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication2.xsd" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication3.xsd" />
-    <None Include="Web References\dk.nspop.batchcopy\StamdataReplication4.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

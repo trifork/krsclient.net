@@ -7,6 +7,7 @@ namespace krsclient.net
         {
             var replicator = new Replicator();
             replicator.Replicate();
+
         }
     }
 }

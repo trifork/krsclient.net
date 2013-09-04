@@ -37,7 +37,7 @@ namespace krsclient.net
                 id = Guid.NewGuid().ToString("D"),
                 Timestamp = new dk.nsi.batchcopy.Timestamp 
                 {
-                    Created = DateTime.UtcNow 
+                    Created = FiveMinutesAgoUtc().ToLocalTime()
                 },
                 Assertion = assertion
             };

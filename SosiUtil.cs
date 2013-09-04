@@ -1,41 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Security.Cryptography.X509Certificates;
 using dk.nsi.seal;
-using Microsoft.IdentityModel.Tokens.Saml2;
 
 namespace krsclient.net
 {
-    using System.Net;
     using dk.nsi.seal.dgwstypes;
 
     class SosiUtil
     {
-        private SealCard idCard;
-        private X509Certificate2 systemCert;
+        private SealCard _idCard;
+        private readonly X509Certificate2 _systemCert;
 
         public SosiUtil(String certPath, String certPassword)
         {
-            systemCert = new X509Certificate2(certPath, certPassword);
+            _systemCert = new X509Certificate2(certPath, certPassword);
         }
 
         public SealCard GetIdCard()
         {
-            if (!IsIdCardValid(idCard))
+            if (!IsIdCardValid(_idCard))
             {
-                var rsc = SealCard.Create(MakeAssertionForSTS(systemCert));
+                var rsc = SealCard.Create(MakeAssertionForSts(_systemCert));
                 // TODO Get URL from properties
-                idCard = SealUtilities.SignIn(rsc, "TRIFORK SERVICES A/S", 
+                _idCard = SealUtilities.SignIn(rsc, "TRIFORK SERVICES A/S", 
                     "http://test1-cnsp.ekstern-test.nspop.dk:8080/sts/services/SecurityTokenService");
             }
-            return idCard;
+            return _idCard;
         }
 
         public dk.nsi.batchcopy.Security MakeSecurity()
         {
-            dk.nsi.batchcopy.AssertionType assertion =
+            var assertion =
                 GetIdCard().GetAssertion<dk.nsi.batchcopy.AssertionType>(typeof(Assertion).Name);
             return new dk.nsi.batchcopy.Security
             {
@@ -64,7 +59,7 @@ namespace krsclient.net
         }
 
 
-        private bool IsIdCardValid(SealCard sc)
+        private static bool IsIdCardValid(SealCard sc)
         {
             var fiveMinAgo = FiveMinutesAgoUtc();
             // Check if the card is created and valid for atleast five minutes.
@@ -73,7 +68,7 @@ namespace krsclient.net
             return false;
         }
 
-        private DateTime FiveMinutesAgoUtc()
+        private static DateTime FiveMinutesAgoUtc()
         {
             TimeSpan secsSpan = TimeSpan.FromSeconds(1);
             DateTime fiveMinAgo = DateTime.Now - TimeSpan.FromMinutes(5);
@@ -84,12 +79,12 @@ namespace krsclient.net
         static public string EncodeTo64(X509Certificate2 certificate)
         {
             byte[] toEncodeAsBytes = certificate.GetCertHash();
-            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+            string returnValue = Convert.ToBase64String(toEncodeAsBytes);
             return returnValue;
 
         }
 
-        private Assertion MakeAssertionForSTS(X509Certificate2 certificate)
+        private static Assertion MakeAssertionForSts(X509Certificate2 certificate)
         {
             var vnow = FiveMinutesAgoUtc();
             var ass = new Assertion
@@ -114,19 +109,19 @@ namespace krsclient.net
                     {
                         SubjectConfirmationData = new SubjectConfirmationData
                         {
-                            Item = new dk.nsi.seal.dgwstypes.KeyInfo
+                            Item = new KeyInfo
                             {
                                 Item = "OCESSignature"
                             }
                         }
                     }
                 },
-                AttributeStatement = new dk.nsi.seal.dgwstypes.AttributeStatement[]
+                AttributeStatement = new[]
                 {
-                    new dk.nsi.seal.dgwstypes.AttributeStatement
+                    new AttributeStatement
                     {
                         id = AttributeStatementID.IDCardData,
-                        Attribute = new Attribute[] 
+                        Attribute = new[] 
                         {
                             new Attribute{ Name = AttributeName.sosiIDCardID, AttributeValue = Guid.NewGuid().ToString("D")},
                             new Attribute{ Name = AttributeName.sosiIDCardVersion, AttributeValue = "1.0.1"},
@@ -138,7 +133,7 @@ namespace krsclient.net
                     new AttributeStatement
                     {
                         id = AttributeStatementID.SystemLog,
-                        Attribute = new Attribute[] 
+                        Attribute = new[] 
                         {
                             new Attribute{ Name = AttributeName.medcomITSystemName, AttributeValue = "krsclient.net"},
                             new Attribute{ Name = AttributeName.medcomCareProviderID, 

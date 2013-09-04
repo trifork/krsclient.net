@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using dk.nsi.seal;
+using dk.nsi.seal.dgwstypes;
+using Attribute = dk.nsi.seal.dgwstypes.Attribute;
 
 namespace krsclient.net
 {
-    using dk.nsi.seal.dgwstypes;
-
     class SosiUtil
     {
         private SealCard _idCard;

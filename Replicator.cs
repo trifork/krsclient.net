@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using dk.nsi.batchcopy;
+using krsclient.net.dk.nsi.batchcopy;
 
 namespace krsclient.net
 {

@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
@@ -67,8 +68,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Replicator.cs" />
+    <Compile Include="Service References\dk.nsi.batchcopy\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="SosiUtil.cs" />
-    <Compile Include="StamdataReplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -80,9 +85,50 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\DataSources\System.Xml.XmlElement.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\krsclient.net.dk.nsi.batchcopy.Header.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\krsclient.net.dk.nsi.batchcopy.Security.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication.wsdl" />
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\dk.nsi.batchcopy\StamdataReplication5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\dk.nsi.batchcopy\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\dk.nsi.batchcopy\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\dk.nsi.batchcopy\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\dk.nsi.batchcopy\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

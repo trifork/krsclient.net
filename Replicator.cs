@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using krsclient.net.dk.nsi.batchcopy;
+using krsclient.net.Exception;
 
 namespace krsclient.net
 {
@@ -18,19 +19,14 @@ namespace krsclient.net
             _replicationClient = new StamdataReplicationClient("StamdataReplicationTEST2");
         }
 
-        public void Replicate(String register, String dataType, String offset = "")
+        public List<Record> Replicate(String register, String dataType, String offset = "")
         {
             Security sec = _sosiUtil.MakeSecurity();
             Header header = _sosiUtil.MakeHeader();
             ReplicationRequestType request = MakeReplicationRequest(register, dataType, offset);
             XmlElement response = _replicationClient.replicate(ref sec, ref header, request);
             
-            // Parse the response xml
-            List<Record> records = ParseServiceResponse(response);
-            foreach (var record in records)
-            {
-                Console.WriteLine("{0}", record);
-            }
+            return ParseServiceResponse(response);
         }
 
         private static ReplicationRequestType MakeReplicationRequest(String register, String dataType, String offset)

@@ -1,5 +1,5 @@
 ﻿
-namespace krsclient.net
+namespace krsclient.net.Exception
 {
     class ParseErrorException : System.Exception
     {

@@ -25,6 +25,11 @@ namespace krsclient.net
             get { return _offsetToken; }
         }
 
+        public String ValueOfFieldNamed(string name)
+        {
+            return FieldValues.ContainsKey(name) ? FieldValues[name] : null;
+        }
+
         public override string ToString()
         {
             String result = "Record ("+OffsetToken+"): ";

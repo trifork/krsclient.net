@@ -6,7 +6,7 @@ namespace krsclient.net
         static void Main(string[] args)
         {
             var replicator = new Replicator();
-            replicator.Replicate();
+            replicator.Replicate("ddv", "diseases");
 
         }
     }

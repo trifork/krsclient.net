@@ -11,8 +11,6 @@ namespace krsclient.net
     {
         static void Main(string[] args)
         {
-            string workDir = Directory.GetCurrentDirectory();
-            AppDomain.CurrentDomain.SetData("DataDirectory", workDir + "\\Data");
             var replicator = new Replicator();
 
             // Replicate DDV registers

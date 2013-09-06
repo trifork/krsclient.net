@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.IO;
 using krsclient.net.Persist;
 using krsclient.net.Specifications;
 
@@ -18,21 +17,60 @@ namespace krsclient.net
             Console.WriteLine("Successfully updated {0} ddv records", updatedRecords);
         }
 
+        /// <summary>
+        /// Repliker alle tabeller angivet i et IReplicationMap
+        /// </summary>
+        /// <param name="replicator"></param>
+        /// <param name="replicationMap"></param>
+        /// <returns></returns>
         public static uint ReplicateAndPersist(Replicator replicator, IReplicationMap replicationMap)
         {
             var recordDao = new RecordDao();
+            var historyDao = new ReplicationHistoryDao();
             uint totalUpdatedRecords = 0;
-            foreach (var registerSpecification in replicationMap.GetRegisterSpecifications())
+            foreach (var registerSpecification in replicationMap.GetTableSpecifications())
             {
-                List<Record> records;
-                do
-                {
-                    records = replicator.Replicate(
-                        registerSpecification.RegisterName, registerSpecification.DatatypeName);
-                    totalUpdatedRecords += recordDao.PersistRecords(records.ToArray(), registerSpecification);
-                } while (records.Count > 0);
+                totalUpdatedRecords += ReplicateAndPersistSpecification(
+                    replicator, registerSpecification, recordDao, historyDao);
             }
+            Console.Write("\r\n");
             return totalUpdatedRecords;
+        }
+
+        /// <summary>
+        /// Repliker en enkelt tabel
+        /// </summary>
+        /// <param name="replicator"></param>
+        /// <param name="tableSpecification">Tabel specifikationen</param>
+        /// <param name="recordDao"></param>
+        /// <param name="historyDao"></param>
+        /// <returns>Antallet af opdaterede og indsatte rækker</returns>
+        private static uint ReplicateAndPersistSpecification(Replicator replicator, 
+            TableSpecification tableSpecification, RecordDao recordDao, 
+            ReplicationHistoryDao historyDao)
+        {
+            uint updatedRecords = 0;
+            List<Record> records;
+            
+            string registerName = tableSpecification.RegisterName;
+            string datatypeName = tableSpecification.DatatypeName;
+
+            String lastToken = historyDao.FindLatestProgressFor(registerName, datatypeName);
+            do
+            {
+                records = replicator.Replicate(registerName, datatypeName, lastToken);
+                if (records.Count > 0)
+                {
+                    updatedRecords += recordDao.PersistRecords(records.ToArray(), tableSpecification);
+                    lastToken = records[records.Count - 1].OffsetToken;
+                }
+                Console.Write(".");
+            } while (records.Count > 0);
+
+            // Save our progress
+            if (lastToken != null)
+                historyDao.SaveProgress(registerName, datatypeName, lastToken, updatedRecords);
+            return updatedRecords;
         }
     }
 }

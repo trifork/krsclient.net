@@ -3,6 +3,6 @@ namespace krsclient.net
 {
     interface IReplicationMap
     {
-        RegisterSpecification[] GetRegisterSpecifications();
+        TableSpecification[] GetTableSpecifications();
     }
 }

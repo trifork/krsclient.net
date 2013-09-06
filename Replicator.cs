@@ -1,24 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Xml;
 using krsclient.net.dk.nsi.batchcopy;
 using krsclient.net.Exception;
 
 namespace krsclient.net
 {
+    /// <summary>
+    /// Håndterer replikering fra kopi register servicen
+    /// </summary>
     class Replicator
     {
         private readonly SosiUtil _sosiUtil;
         private readonly StamdataReplicationClient _replicationClient;
-        private const uint MaxRecords = 5;
+        /// <summary>
+        /// Max antal rækker der hentes i hver kald (servicen har et max på 2000 værdien skal være der eller derunder)
+        /// </summary>
+        private const uint MaxRecords = 500;
 
         public Replicator()
         {
             // TODO Get from settings
-            _sosiUtil = new SosiUtil("Resources/FMK-KRS-TEST.p12", "Test1234");
-            _replicationClient = new StamdataReplicationClient("StamdataReplicationTEST2");
+            String certPath = ConfigurationManager.AppSettings["CERTPath"];
+            String certPass = ConfigurationManager.AppSettings["CERTPass"];
+            _sosiUtil = new SosiUtil(certPath, certPass);
+            _replicationClient = new StamdataReplicationClient("StamdataReplication");
         }
 
+        /// <summary>
+        /// Foretag et replikerings kald til kopi register servicen
+        /// </summary>
+        /// <param name="register">Register navn</param>
+        /// <param name="dataType">DataType navn</param>
+        /// <param name="offset">Offset/token at starte med</param>
+        /// <returns>Hentede rækker</returns>
         public List<Record> Replicate(String register, String dataType, String offset = "")
         {
             Security sec = _sosiUtil.MakeSecurity();
@@ -31,6 +47,8 @@ namespace krsclient.net
 
         private static ReplicationRequestType MakeReplicationRequest(String register, String dataType, String offset)
         {
+            if (offset == null)
+                offset = "00000000000000000000";
             return new ReplicationRequestType
             {
                 register = register,

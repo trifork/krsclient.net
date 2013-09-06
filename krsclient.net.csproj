@@ -84,11 +84,12 @@
     <Compile Include="Exception\InvalidSpecificationException.cs" />
     <Compile Include="Exception\ParseErrorException.cs" />
     <Compile Include="Persist\RecordDao.cs" />
+    <Compile Include="Persist\ReplicationHistoryDao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Record.cs" />
     <Compile Include="IReplicationMap.cs" />
-    <Compile Include="RegisterSpecification.cs" />
+    <Compile Include="TableSpecification.cs" />
     <Compile Include="Replicator.cs" />
     <Compile Include="Service References\dk.nsi.batchcopy\Reference.cs">
       <AutoGen>True</AutoGen>

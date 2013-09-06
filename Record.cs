@@ -4,9 +4,19 @@ using System.Collections.Generic;
 
 namespace krsclient.net
 {
+    /// <summary>
+    /// En række modtaget fra kopi register servicen
+    /// </summary>
     class Record
     {
+        /// <summary>
+        /// Offset token for denne række
+        /// </summary>
         private readonly string _offsetToken;
+
+        /// <summary>
+        /// Felt navne og værdier
+        /// </summary>
         private readonly SortedList<String, String> _fieldValues;
 
         public Record(String offsetToken, SortedList<String, String> fieldValues)

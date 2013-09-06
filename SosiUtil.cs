@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using dk.nsi.seal;
 using dk.nsi.seal.dgwstypes;
@@ -11,8 +12,20 @@ namespace krsclient.net
         private SealCard _idCard;
         private readonly X509Certificate2 _systemCert;
 
+        private readonly String _issuer;
+        private readonly String _sosiCareProviderName;
+        private readonly String _sosiCareProviderCvr;
+        private readonly String _itSystemName;
+
+        private readonly String _stsUrl;
+
         public SosiUtil(String certPath, String certPassword)
         {
+            _issuer = ConfigurationManager.AppSettings["IDCardIssuer"];
+            _sosiCareProviderName = ConfigurationManager.AppSettings["SosiCareProviderName"];
+            _sosiCareProviderCvr = ConfigurationManager.AppSettings["SosiCareProviderCvr"];
+            _itSystemName = ConfigurationManager.AppSettings["ITSystemName"];
+            _stsUrl = ConfigurationManager.AppSettings["STSUrl"];
             _systemCert = new X509Certificate2(certPath, certPassword);
         }
 
@@ -21,9 +34,7 @@ namespace krsclient.net
             if (!IsIdCardValid(_idCard))
             {
                 var rsc = SealCard.Create(MakeAssertionForSts(_systemCert));
-                // TODO Get URL from properties
-                _idCard = SealUtilities.SignIn(rsc, "TRIFORK SERVICES A/S", 
-                    "http://test1-cnsp.ekstern-test.nspop.dk:8080/sts/services/SecurityTokenService");
+                _idCard = SealUtilities.SignIn(rsc, _issuer, _stsUrl);
             }
             return _idCard;
         }
@@ -84,7 +95,7 @@ namespace krsclient.net
 
         }
 
-        private static Assertion MakeAssertionForSts(X509Certificate2 certificate)
+        private Assertion MakeAssertionForSts(X509Certificate2 certificate)
         {
             var vnow = FiveMinutesAgoUtc();
             var ass = new Assertion
@@ -92,7 +103,7 @@ namespace krsclient.net
                 IssueInstant = FiveMinutesAgoUtc(),
                 id = "IDCard",
                 Version = 1.0m,
-                Issuer = "krsclient.net",
+                Issuer = _issuer,
                 Conditions = new Conditions
                 {
                     NotBefore = vnow,
@@ -103,7 +114,7 @@ namespace krsclient.net
                     NameID = new NameID
                     {
                         Format = SubjectIdentifierType.medcomcvrnumber,
-                        Value = "25520041"
+                        Value = _sosiCareProviderCvr
                     },
                     SubjectConfirmation = new SubjectConfirmation
                     {
@@ -135,10 +146,11 @@ namespace krsclient.net
                         id = AttributeStatementID.SystemLog,
                         Attribute = new[] 
                         {
-                            new Attribute{ Name = AttributeName.medcomITSystemName, AttributeValue = "krsclient.net"},
+                            new Attribute{ Name = AttributeName.medcomITSystemName, AttributeValue = _itSystemName},
                             new Attribute{ Name = AttributeName.medcomCareProviderID, 
-                                AttributeValue = "25520041", NameFormatSpecified = true, NameFormat = SubjectIdentifierType.medcomcvrnumber},
-                            new Attribute{ Name = AttributeName.medcomCareProviderName, AttributeValue = "TRIFORK SERVICES A/S"},
+                                AttributeValue = _sosiCareProviderCvr, NameFormatSpecified = true, 
+                                NameFormat = SubjectIdentifierType.medcomcvrnumber},
+                            new Attribute{ Name = AttributeName.medcomCareProviderName, AttributeValue = _sosiCareProviderName},
                         }
                     }
                 }

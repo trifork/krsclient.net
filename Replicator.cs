@@ -17,7 +17,7 @@ namespace krsclient.net
         /// <summary>
         /// Max antal rækker der hentes i hver kald (servicen har et max på 2000 værdien skal være der eller derunder)
         /// </summary>
-        private const uint MaxRecords = 500;
+        private const uint MaxRecords = 2000;
 
         public Replicator()
         {

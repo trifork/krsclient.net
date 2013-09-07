@@ -49,7 +49,7 @@ namespace krsclient.net
             TableSpecification tableSpecification, RecordDao recordDao, 
             ReplicationHistoryDao historyDao)
         {
-            uint updatedRecords = 0;
+            uint totalUpdatedRecords = 0;
             List<Record> records;
             
             string registerName = tableSpecification.RegisterName;
@@ -61,16 +61,16 @@ namespace krsclient.net
                 records = replicator.Replicate(registerName, datatypeName, lastToken);
                 if (records.Count > 0)
                 {
-                    updatedRecords += recordDao.PersistRecords(records.ToArray(), tableSpecification);
+                    uint recordsPersisted = recordDao.PersistRecords(records.ToArray(), tableSpecification);
+                    totalUpdatedRecords += recordsPersisted;
                     lastToken = records[records.Count - 1].OffsetToken;
+                    // Save our progress
+                    if (lastToken != null)
+                        historyDao.SaveProgress(registerName, datatypeName, lastToken, recordsPersisted);
                 }
                 Console.Write(".");
             } while (records.Count > 0);
-
-            // Save our progress
-            if (lastToken != null)
-                historyDao.SaveProgress(registerName, datatypeName, lastToken, updatedRecords);
-            return updatedRecords;
+            return totalUpdatedRecords;
         }
     }
 }

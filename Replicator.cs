@@ -21,11 +21,12 @@ namespace krsclient.net
 
         public Replicator()
         {
-            // TODO Get from settings
             String certPath = ConfigurationManager.AppSettings["CERTPath"];
             String certPass = ConfigurationManager.AppSettings["CERTPass"];
             _sosiUtil = new SosiUtil(certPath, certPass);
             _replicationClient = new StamdataReplicationClient("StamdataReplication");
+            // For debugging messages
+            _replicationClient.Endpoint.Behaviors.Add(new ReplicatorMonitoringEndpointBehaviour());
         }
 
         /// <summary>

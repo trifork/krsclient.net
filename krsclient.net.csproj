@@ -73,6 +73,7 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -83,6 +84,8 @@
   <ItemGroup>
     <Compile Include="Exception\InvalidSpecificationException.cs" />
     <Compile Include="Exception\ParseErrorException.cs" />
+    <Compile Include="ReplicatorMonitoringEndpointBehaviour.cs" />
+    <Compile Include="RelicatorClientMessageInspector.cs" />
     <Compile Include="Persist\RecordDao.cs" />
     <Compile Include="Persist\ReplicationHistoryDao.cs" />
     <Compile Include="Program.cs" />

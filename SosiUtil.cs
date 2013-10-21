@@ -62,8 +62,10 @@ namespace krsclient.net
                 SecurityLevelSpecified = true,
                 Linking = new dk.nsi.batchcopy.Linking
                 {
-                    MessageID = Guid.NewGuid().ToString("D")
+                    MessageID = Guid.NewGuid().ToString("D"),
                 },
+//                FlowStatus = dk.nsi.batchcopy.FlowStatus.flow_running,
+//                FlowStatusSpecified = true,
                 RequireNonRepudiationReceipt = dk.nsi.batchcopy.RequireNonRepudiationReceipt.no,
                 RequireNonRepudiationReceiptSpecified = true,
             };

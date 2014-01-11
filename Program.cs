@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using krsclient.net.Persist;
 using krsclient.net.Specifications;
+using System.Data.Common;
+using System.Configuration;
 
 namespace krsclient.net
 {
@@ -17,6 +19,16 @@ namespace krsclient.net
             Console.WriteLine("Successfully updated {0} ddv records", updatedRecords);
         }
 
+        private static DbConnection CreateConnection()
+        {
+            var connectionStringName = ConfigurationManager.AppSettings["ConnectionStringName"];
+            var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
+            DbProviderFactory factory = DbProviderFactories.GetFactory(connectionString.ProviderName);
+            var connection = factory.CreateConnection();
+            connection.ConnectionString = connectionString.ConnectionString;
+            return connection;
+        }
+
         /// <summary>
         /// Repliker alle tabeller angivet i et IReplicationMap
         /// </summary>
@@ -25,8 +37,9 @@ namespace krsclient.net
         /// <returns></returns>
         public static uint ReplicateAndPersist(Replicator replicator, IReplicationMap replicationMap)
         {
-            var recordDao = new RecordDao();
-            var historyDao = new ReplicationHistoryDao();
+            var connection = CreateConnection();
+            var recordDao = new RecordDao(connection);
+            var historyDao = new ReplicationHistoryDao(connection);
             uint totalUpdatedRecords = 0;
             foreach (var registerSpecification in replicationMap.GetTableSpecifications())
             {

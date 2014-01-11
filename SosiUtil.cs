@@ -64,8 +64,6 @@ namespace krsclient.net
                 {
                     MessageID = Guid.NewGuid().ToString("D"),
                 },
-//                FlowStatus = dk.nsi.batchcopy.FlowStatus.flow_running,
-//                FlowStatusSpecified = true,
                 RequireNonRepudiationReceipt = dk.nsi.batchcopy.RequireNonRepudiationReceipt.no,
                 RequireNonRepudiationReceiptSpecified = true,
             };

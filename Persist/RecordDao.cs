@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlServerCe;
 using System.Text;
 using System.Xml;
 using krsclient.net.Exception;
+using System.Data.Common;
 
 namespace krsclient.net.Persist
 {
@@ -14,13 +14,11 @@ namespace krsclient.net.Persist
     /// </summary>
     class RecordDao
     {
-        private readonly SqlCeConnection _connection;
+        private readonly DbConnection _connection;
 
-        public RecordDao()
+        public RecordDao(DbConnection connection)
         {
-            string connectionString = ConfigurationManager.
-                ConnectionStrings["DemoDatabaseConnectionString"].ConnectionString;
-            _connection = new SqlCeConnection(connectionString);
+            _connection = connection;
         }
 
         /// <summary>
@@ -33,10 +31,10 @@ namespace krsclient.net.Persist
         {
             uint updated = 0;
             _connection.Open();
-            SqlCeTransaction transaction = _connection.BeginTransaction();
+            DbTransaction transaction = _connection.BeginTransaction();
             try
             {
-                SqlCeCommand command = _connection.CreateCommand();
+                DbCommand command = _connection.CreateCommand();
                 command.Connection = _connection;
                 command.Transaction = transaction;
 
@@ -98,7 +96,7 @@ namespace krsclient.net.Persist
         /// <param name="command">Et command object der er klar til at køre statements med</param>
         /// <returns></returns>
         private static bool InsertOrUpdateRecord(Record record, TableSpecification tableSpecification,
-            SqlCeCommand command)
+            DbCommand command)
         {
             // Opbyg en streng afhængig af om det drejer sig om en insert eller en update.
             command.CommandText = 
@@ -116,7 +114,7 @@ namespace krsclient.net.Persist
                 if (fieldSpec != null)
                 {
                     Object properValue = ConvertToProperType(fieldSpec, keyValuePair.Value);
-                    command.Parameters.AddWithValue("@" + keyValuePair.Key, properValue);
+                    AddParamWithValue(command, "@" + keyValuePair.Key, properValue);
                 }
             }
             int modifiedRows = command.ExecuteNonQuery();
@@ -203,7 +201,7 @@ namespace krsclient.net.Persist
         /// <param name="command">Et command object der er klar til at køre statements med</param>
         /// <returns>true hvis rækken allerede findes i databasen</returns>
         private static bool RecordExists(TableSpecification tableSpecification, 
-            Record record, SqlCeCommand command)
+            Record record, DbCommand command)
         {
 
             var identifierField = tableSpecification.GetIdentifierField();
@@ -217,12 +215,22 @@ namespace krsclient.net.Persist
             command.CommandText = "SELECT COUNT(1) FROM "+tableSpecification.TargetTableName + 
                                   " WHERE " + validFromField.TargetName + "=@ValidFrom AND " + 
                                   identifierField.TargetName + "=@Identifier";
-            command.Parameters.AddWithValue("@ValidFrom", validFromValue);
-            command.Parameters.AddWithValue("@Identifier", identifier);
+            AddParamWithValue(command, "@ValidFrom", validFromValue);
+            AddParamWithValue(command, "@Identifier", identifier);
 
             var count = (Int32) command.ExecuteScalar();
             command.Parameters.Clear();
             return count > 0;
         }
+
+        private static void AddParamWithValue(DbCommand command, string name, object value)
+        {
+            var param = command.CreateParameter();
+            param.ParameterName = name;
+            param.Value = value;
+            command.Parameters.Add(param);
+        }
+
     }
+
 }

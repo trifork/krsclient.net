@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Configuration;
-using System.Data.SqlServerCe;
+using System.Data.Common;
 
 namespace krsclient.net.Persist
 {
@@ -10,13 +10,11 @@ namespace krsclient.net.Persist
     /// </summary>
     class ReplicationHistoryDao
     {
-        private readonly SqlCeConnection _connection;
+        private readonly DbConnection _connection;
 
-        public ReplicationHistoryDao()
+        public ReplicationHistoryDao(DbConnection connection)
         {
-            string connectionString = ConfigurationManager.
-                ConnectionStrings["DemoDatabaseConnectionString"].ConnectionString;
-            _connection = new SqlCeConnection(connectionString);
+            _connection = connection;
         }
 
         /// <summary>
@@ -30,12 +28,12 @@ namespace krsclient.net.Persist
             _connection.Open();
             try
             {
-                SqlCeCommand command = _connection.CreateCommand();
+                DbCommand command = _connection.CreateCommand();
                 command.CommandText = "SELECT TOP(1) LastToken FROM HouseKeeping WHERE " + 
                     "Register=@Register AND DataType=@DataType "+
                     "ORDER BY FinishedAt DESC";
-                command.Parameters.AddWithValue("@Register", register);
-                command.Parameters.AddWithValue("@DataType", dataType);
+                AddParamWithValue(command, "@Register", register);
+                AddParamWithValue(command, "@DataType", dataType);
                 return (String) command.ExecuteScalar();
             }
             finally
@@ -55,20 +53,20 @@ namespace krsclient.net.Persist
             string lastToken, uint updatedRecords)
         {
             _connection.Open();
-            SqlCeTransaction transaction = _connection.BeginTransaction();
+            DbTransaction transaction = _connection.BeginTransaction();
             try
             {
-                SqlCeCommand command = _connection.CreateCommand();
+                DbCommand command = _connection.CreateCommand();
                 command.Connection = _connection;
                 command.Transaction = transaction;
 
                 command.CommandText = "INSERT INTO HouseKeeping(RecordsUpdated, LastToken, FinishedAt, Register, DataType) " +
                     " VALUES (@RecordsUpdated, @LastToken, @FinishedAt, @Register, @DataType)";
-                command.Parameters.AddWithValue("@RecordsUpdated", updatedRecords);
-                command.Parameters.AddWithValue("@LastToken", lastToken);
-                command.Parameters.AddWithValue("@FinishedAt", DateTime.Now);
-                command.Parameters.AddWithValue("@Register", register);
-                command.Parameters.AddWithValue("@DataType", dataType);
+                AddParamWithValue(command, "@RecordsUpdated", updatedRecords);
+                AddParamWithValue(command, "@LastToken", lastToken);
+                AddParamWithValue(command, "@FinishedAt", DateTime.Now);
+                AddParamWithValue(command, "@Register", register);
+                AddParamWithValue(command, "@DataType", dataType);
                 command.ExecuteNonQuery();
                 transaction.Commit();
             }
@@ -81,6 +79,14 @@ namespace krsclient.net.Persist
             {
                 _connection.Close();
             }
+        }
+
+        private void AddParamWithValue(DbCommand command, string name, object value)
+        {
+            var param = command.CreateParameter();
+            param.ParameterName = name;
+            param.Value = value;
+            command.Parameters.Add(param);
         }
 
     }

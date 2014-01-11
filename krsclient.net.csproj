@@ -66,7 +66,10 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Microsoft SQL Server Compact Edition\v3.5\Private\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization" />
@@ -84,8 +87,8 @@
   <ItemGroup>
     <Compile Include="Exception\InvalidSpecificationException.cs" />
     <Compile Include="Exception\ParseErrorException.cs" />
+    <Compile Include="ReplicatorClientMessageInspector.cs" />
     <Compile Include="ReplicatorMonitoringEndpointBehaviour.cs" />
-    <Compile Include="RelicatorClientMessageInspector.cs" />
     <Compile Include="Persist\RecordDao.cs" />
     <Compile Include="Persist\ReplicationHistoryDao.cs" />
     <Compile Include="Program.cs" />
